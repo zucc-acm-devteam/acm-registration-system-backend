@@ -1,6 +1,6 @@
 from flask import jsonify, g
 
-from app.libs.error_code import CreateSuccess
+from app.libs.error_code import CreateSuccess, NotFound
 from app.libs.redprint import Redprint
 from app.libs.token_auth import auth
 from app.models.user import User
@@ -14,7 +14,10 @@ api = Redprint('user')
 def get_current_user_api():
     user = g.user
     return jsonify({
-        'user': user
+        'code': 0,
+        'data': {
+            'user': user
+        }
     })
 
 
@@ -22,8 +25,13 @@ def get_current_user_api():
 @auth.login_required
 def get_user_api(username):
     user = User.get_user_by_username(username)
+    if not user:
+        raise NotFound()
     return jsonify({
-        'user': user
+        'code': 0,
+        'data': {
+            'user': user
+        }
     })
 
 

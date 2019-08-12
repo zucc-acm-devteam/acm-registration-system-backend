@@ -15,7 +15,10 @@ def get_token_api():
     expiration = current_app.config['TOKEN_EXPIRATION']
     token = _generate_auth_token(identity['uid'], expiration)
     return jsonify({
-        'token': token.decode('ascii')
+        'code': 0,
+        'data': {
+            'token': token.decode('ascii')
+        }
     }), 201
 
 
