@@ -14,15 +14,19 @@ from app.models.user import User
 auth = HTTPBasicAuth()
 
 
+def md5(raw):
+    return hashlib.md5(raw.encode('utf8')).hexdigest()
+
+
 @auth.verify_password
 def verify_token(token, secret):
     ua = request.headers.get('User-Agent', '')
     if ua != WHITELIST_UA:
-        timestamp = request.headers.get('Timestamp', 0)
-        if abs(timestamp - time.time()) > 1000:
+        timestamp = int(request.headers.get('Timestamp', 0))
+        if abs(timestamp - int(time.time())) > 10:
             raise AuthFailed()
 
-        my_secret = hashlib.md5((token + str(timestamp)).encode('utf8')).hexdigest()
+        my_secret = md5(token + str(timestamp))
         if my_secret != secret:
             raise AuthFailed()
 
