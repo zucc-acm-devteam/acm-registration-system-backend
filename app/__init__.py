@@ -1,8 +1,10 @@
 from flask_cors import CORS
+from flask_mail import Mail
 
 from .app import Flask
 
 cors = CORS(supports_credentials=True)
+mail = Mail()
 
 
 def register_blueprints(flask_app):
@@ -21,6 +23,9 @@ def register_plugin(flask_app):
 
     # 注册cors
     cors.init_app(flask_app)
+
+    # 注册mail
+    mail.init_app(flask_app)
 
 
 def create_app():

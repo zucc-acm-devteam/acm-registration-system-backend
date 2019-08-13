@@ -36,6 +36,17 @@ class User(Base):
             user.permission = permission
             db.session.add(user)
 
+    @classmethod
+    def modify(cls, username, password=None, nickname=None, permission=None):
+        user = cls.get_user_by_username(username)
+        with db.auto_commit():
+            if password is not None:
+                user.password = password
+            if nickname is not None:
+                user.nickname = nickname
+            if permission is not None:
+                user.permission = permission
+
     @property
     def scope(self):
         if self.permission == 0:  # 未激活用户
