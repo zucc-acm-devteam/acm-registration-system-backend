@@ -30,11 +30,13 @@ def is_in_scope(scope, endpoint):
         return False
 
 
-class AdminScope(Scope):
-    forbidden = []
+class UserScope(Scope):
     allow_module = ['v1.token', 'v1.user']
 
 
-class UserScope(Scope):
-    forbidden = []
+class InactivateUserScope(Scope):
+    allow_api = ['v1.token+get_token_api', 'v1.user+get_current_user_api']
+
+
+class AdminScope(Scope):
     allow_module = ['v1.token', 'v1.user']
