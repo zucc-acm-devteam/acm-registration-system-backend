@@ -39,4 +39,4 @@ def get_user_api(username):
 def create_user_api():
     form = RegisterForm().validate_for_api()
     User.register(form.username.data, form.password.data, form.nickname.data)
-    return CreateSuccess('register user successful')
+    return CreateSuccess('register successful')
