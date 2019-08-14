@@ -12,9 +12,14 @@ class CreateSuccess(APIException):
     error_code = 0
 
 
-class DeleteSuccess(Success):
+class Accept(APIException):
     code = 202
-    error_code = 1
+    error_code = 0
+
+
+class DeleteSuccess(Success):
+    code = 204
+    error_code = 0
 
 
 class ServerError(APIException):
