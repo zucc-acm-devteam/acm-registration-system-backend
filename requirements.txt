@@ -2,6 +2,9 @@ Flask
 Flask-Cors
 Flask-httpauth
 Flask-SQLAlchemy
+Flask-mail
+Flask-redis
 PyMySQL
 WTForms
 gunicorn
+captcha

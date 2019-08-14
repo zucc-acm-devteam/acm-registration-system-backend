@@ -1,10 +1,13 @@
 from flask_cors import CORS
 from flask_mail import Mail
+from flask_redis import FlaskRedis
 
 from .app import Flask
+from app.models.base import db
 
 cors = CORS(supports_credentials=True)
 mail = Mail()
+redis = FlaskRedis()
 
 
 def register_blueprints(flask_app):
@@ -14,7 +17,6 @@ def register_blueprints(flask_app):
 
 def register_plugin(flask_app):
     # 注册sqlalchemy
-    from app.models.base import db
     db.init_app(flask_app)
 
     # 初始化数据库
@@ -26,6 +28,9 @@ def register_plugin(flask_app):
 
     # 注册mail
     mail.init_app(flask_app)
+
+    # 注册redis
+    redis.init_app(flask_app)
 
 
 def create_app():
