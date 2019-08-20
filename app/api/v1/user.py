@@ -4,7 +4,7 @@ from app.libs.error_code import CreateSuccess, NotFound, Success, Forbidden
 from app.libs.redprint import Redprint
 from app.libs.token_auth import auth
 from app.models.user import User
-from app.validators.forms import RegisterForm
+from app.validators.forms import RegisterForm, UuidForm
 from app import redis as rd
 
 api = Redprint('user')
@@ -24,18 +24,19 @@ def get_user_api(username):
     })
 
 
-@api.route('/register/<string:uuid>', methods=['POST'])
-def register_user_api(uuid):
-    _verification(uuid)
+@api.route('/', methods=['POST'])
+def register_user_api():
     form = RegisterForm().validate_for_api()
+    _verification(form.uuid.data)
     User.register(form.username.data, form.password.data, form.nickname.data)
     return CreateSuccess('register successful')
 
 
-@api.route('/activation/<string:uuid>', methods=['POST'])
+@api.route('/activation', methods=['POST'])
 @auth.login_required
-def activate_user_api(uuid):
-    _verification(uuid)
+def activate_user_api():
+    form = UuidForm().validate_for_api()
+    _verification(form.uuid.data)
     User.modify(g.user.username, permission=1)
     return Success('activate success')
 

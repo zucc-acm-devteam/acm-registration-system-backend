@@ -19,11 +19,15 @@ class PasswordForm(Form):
     password = StringField(validators=[DataRequired(message='Password cannot be empty')])
 
 
+class UuidForm(Form):
+    uuid = StringField(validators=[DataRequired(message='Uuid cannot be empty')])
+
+
 class LoginForm(UsernameForm, PasswordForm):
     pass
 
 
-class RegisterForm(PasswordForm):
+class RegisterForm(PasswordForm, UuidForm):
     username = StringField(validators=[DataRequired(message='Username cannot be empty')])
     nickname = StringField(validators=[DataRequired(message='Nickname cannot be empty')])
 
