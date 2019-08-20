@@ -1,4 +1,4 @@
-from wtforms import StringField, IntegerField
+from wtforms import StringField
 from wtforms.validators import DataRequired, Regexp
 
 from app.libs.error_code import NotFound
@@ -33,12 +33,12 @@ class RegisterForm(PasswordForm):
             raise NotFound('The user already exist')
 
 
-class VerificationMailForm(Form):
-    email = StringField(validators=[
-        DataRequired(message='Email cannot be empty'),
-        Regexp(r'^\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}$', message='Email is invalid')
+class MailForm(Form):
+    mail = StringField(validators=[
+        DataRequired(message='Mail cannot be empty'),
+        Regexp(r'^\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}$', message='Mail is invalid')
     ])
 
 
 class CodeForm(Form):
-    code = IntegerField(validators=[DataRequired(message='Code cannot be empty')])
+    code = StringField(validators=[DataRequired(message='Code cannot be empty')])
