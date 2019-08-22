@@ -1,4 +1,4 @@
-from wtforms import StringField
+from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired, Regexp
 
 from app.libs.error_code import NotFound
@@ -29,7 +29,6 @@ class LoginForm(UsernameForm, PasswordForm):
 
 class RegisterForm(PasswordForm, UuidForm):
     username = StringField(validators=[DataRequired(message='Username cannot be empty')])
-    nickname = StringField(validators=[DataRequired(message='Nickname cannot be empty')])
 
     def validate_username(self, value):
         user = User.get_user_by_username(self.username.data)
@@ -46,3 +45,13 @@ class MailForm(Form):
 
 class CodeForm(Form):
     code = StringField(validators=[DataRequired(message='Code cannot be empty')])
+
+
+class UserInfoForm(UsernameForm):
+    nickname = StringField(validators=[DataRequired(message='Nickname cannot be empty')])
+    gender = IntegerField(validators=[DataRequired(message='Gender cannot be empty')])
+    college = StringField(validators=[DataRequired(message='College cannot be empty')])
+    profession = StringField(validators=[DataRequired(message='Profession cannot be empty')])
+    class_ = StringField(validators=[DataRequired(message='Class cannot be empty')])
+    phone = StringField(validators=[DataRequired(message='Phone cannot be empty')])
+    qq = StringField(validators=[DataRequired(message='QQ cannot be empty')])
