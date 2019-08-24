@@ -48,14 +48,14 @@ class CodeForm(Form):
     code = StringField(validators=[DataRequired(message='Code cannot be empty')])
 
 
-class UserInfoForm(UsernameForm):
+class UserInfoForm(Form):
     gender = IntegerField(validators=[DataRequired(message='Gender cannot be empty')])
     college = StringField(validators=[DataRequired(message='College cannot be empty')])
     profession = StringField(validators=[DataRequired(message='Profession cannot be empty')])
     class_ = StringField(validators=[DataRequired(message='Class cannot be empty')])
     phone = StringField(validators=[DataRequired(message='Phone cannot be empty')])
     qq = StringField(validators=[DataRequired(message='QQ cannot be empty')])
-    remark = StringField(validators=[DataRequired(message='Remark cannot be empty')])
+    remark = StringField()
 
 
 class TeamInfoForm(Form):
