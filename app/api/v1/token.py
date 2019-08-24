@@ -24,8 +24,8 @@ def get_token_info_api():
 
 @api.route('', methods=['POST'])
 def get_token_api():
-    form = LoginForm().validate_for_api()
-    identity = User.verify(form.username.data, form.password.data)
+    form = LoginForm().validate_for_api().data_
+    identity = User.verify(form['username'], form['password'])
     expiration = current_app.config['TOKEN_EXPIRATION']
     token = _generate_auth_token(identity['uid'], expiration)
     return jsonify({

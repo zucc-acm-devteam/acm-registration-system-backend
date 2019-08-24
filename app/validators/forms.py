@@ -1,7 +1,8 @@
 from wtforms import StringField, IntegerField
-from wtforms.validators import DataRequired, Regexp
+from wtforms.validators import DataRequired, Regexp, ValidationError
 
 from app.libs.error_code import NotFound
+from app.models.contest import Contest
 from app.models.user import User
 from app.validators.base import BaseForm as Form
 
@@ -48,10 +49,61 @@ class CodeForm(Form):
 
 
 class UserInfoForm(UsernameForm):
-    nickname = StringField(validators=[DataRequired(message='Nickname cannot be empty')])
     gender = IntegerField(validators=[DataRequired(message='Gender cannot be empty')])
     college = StringField(validators=[DataRequired(message='College cannot be empty')])
     profession = StringField(validators=[DataRequired(message='Profession cannot be empty')])
     class_ = StringField(validators=[DataRequired(message='Class cannot be empty')])
     phone = StringField(validators=[DataRequired(message='Phone cannot be empty')])
     qq = StringField(validators=[DataRequired(message='QQ cannot be empty')])
+    remark = StringField(validators=[DataRequired(message='Remark cannot be empty')])
+
+
+class TeamInfoForm(Form):
+    name = StringField(validators=[DataRequired(message='Name cannot be empty')])
+    contest_id = IntegerField(validators=[DataRequired(message='Contest id cannot be empty')])
+
+    def validate_contest_id(self, value):
+        contest = Contest.get_contest_by_id(self.contest_id.data)
+        if not contest:
+            raise NotFound('The contest does not exist')
+
+
+class ContestInfoForm(Form):
+    name = StringField(validators=[DataRequired(message='Name cannot be empty')])
+    limit_num = StringField(validators=[DataRequired(message='Limit number cannot be empty')])
+    status = IntegerField()
+
+    def validate_status(self, value):
+        if self.status.data != 0 and self.status.data != 1:
+            raise ValidationError('Status only can be 0 or 1')
+
+
+class PageForm(Form):
+    page = IntegerField()
+    page_size = IntegerField()
+
+    def validate_page(self, value):
+        if self.page.data:
+            if self.page.data <= 0:
+                raise ValidationError('Page must >= 1')
+        else:
+            self.page.data = 1
+
+    def validate_page_size(self, value):
+        if self.page_size.data:
+            if self.page_size.data > 100:
+                raise ValidationError('Page size must <= 100')
+        else:
+            self.page_size.data = 20
+
+
+class SearchUserForm(PageForm):
+    nickname = StringField()
+    gender = StringField()
+    college = StringField()
+    profession = StringField()
+    class_ = StringField()
+    phone = StringField()
+    qq = StringField()
+    permission = IntegerField()
+    remark = StringField()

@@ -1,5 +1,5 @@
 from flask import Blueprint
-from app.api.v1 import user, token, captcha
+from app.api.v1 import user, token, captcha, contest, team
 
 
 def create_blueprint_v1():
@@ -8,4 +8,6 @@ def create_blueprint_v1():
     user.api.register(bp_v1)
     token.api.register(bp_v1)
     captcha.api.register(bp_v1)
+    contest.api.register(bp_v1)
+    team.api.register(bp_v1)
     return bp_v1

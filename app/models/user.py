@@ -15,10 +15,12 @@ class User(Base):
     class_ = Column('class', String(100))
     phone = Column(String(11))
     qq = Column(String(100))
+    remark = Column(String(10000))
     permission = Column(Integer, nullable=False, default=0)
 
     def keys(self):
-        return ['username', 'nickname', 'gender', 'college', 'profession', 'class_', 'phone', 'qq', 'permission']
+        return ['username', 'nickname', 'gender', 'college', 'profession', 'class_',
+                'phone', 'qq', 'remark', 'permission']
 
     @property
     def password(self):
@@ -30,7 +32,7 @@ class User(Base):
 
     @staticmethod
     def get_user_by_username(username):
-        return User.query.filter_by(username=username).first()
+        return User.query.get(username)
 
     @staticmethod
     def register(username, password, permission=0):
@@ -46,8 +48,28 @@ class User(Base):
         user = cls.get_user_by_username(username)
         with db.auto_commit():
             for key, value in kwargs.items():
-                if hasattr(user, key) and key != 'id':
+                if hasattr(cls, key):
                     setattr(user, key, value)
+
+    @classmethod
+    def search(cls, **kwargs):
+        res = User.query
+        for key, value in kwargs.items():
+            if value and hasattr(cls, key):
+                if isinstance(value, int):
+                    res = res.filter(getattr(cls, key) == value)
+                else:
+                    res = res.filter(getattr(cls, key).like(value))
+
+        data = {
+            'count': res.count()
+        }
+        page = kwargs.get('page', 1)
+        page_size = kwargs.get('page_size', 20)
+        res = res.offset((page - 1) * page_size).limit(page_size)
+        res = res.all()
+        data['data'] = res
+        return data
 
     @property
     def scope(self):
@@ -55,7 +77,7 @@ class User(Base):
             return 'UserScope'
         elif self.permission == -1:  # 管理员
             return 'AdminScope'
-        elif self.permission == 0:  # 未激活用户
+        else:  # 未激活用户
             return 'InactivateUserScope'
 
     @classmethod

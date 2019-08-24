@@ -16,3 +16,13 @@ class BaseForm(Form):
             # form errors
             raise ParameterException(msg=self.errors)
         return self
+
+    @property
+    def data_(self):
+        data = dict()
+        for key, value in self.__dict__.items():
+            try:
+                data[key] = value.data
+            except AttributeError:
+                pass
+        return data
