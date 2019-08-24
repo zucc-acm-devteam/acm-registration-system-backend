@@ -1,6 +1,6 @@
 from flask import jsonify, g
 
-from app.libs.error_code import CreateSuccess, Success, Forbidden
+from app.libs.error_code import CreateSuccess, Success, Forbidden, NotFound
 from app.libs.redprint import Redprint
 from app.libs.token_auth import auth
 from app.models.user import User
@@ -13,7 +13,9 @@ api = Redprint('user')
 @api.route('/<string:username>', methods=['GET'])
 @auth.login_required
 def get_user_api(username):
-    user = User.get_user_by_username(username)
+    user = User.get_by_id(username)
+    if not user:
+        raise NotFound()
     return jsonify({
         'code': 0,
         'data': {
@@ -46,6 +48,9 @@ def register_user_api():
 @api.route('/<string:username>', methods=['PUT'])
 @auth.login_required
 def modify_user_api(username):
+    user = User.get_by_id(username)
+    if not user:
+        raise NotFound()
     if g.user.profession != -1 and g.user.username != username:
         raise Forbidden()
 

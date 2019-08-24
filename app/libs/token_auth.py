@@ -38,7 +38,7 @@ def verify_token(token, secret):
     except SignatureExpired:
         raise AuthFailed(msg='token is expired', error_code=1003)
     uid = data['uid']
-    user = User.get_user_by_username(uid)
+    user = User.get_by_id(uid)
     if not user:
         raise NotFound()
     allow = is_in_scope(user.scope, request.endpoint)

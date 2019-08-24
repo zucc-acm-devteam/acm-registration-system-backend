@@ -31,10 +31,6 @@ class User(Base):
         self._password = generate_password_hash(raw)
 
     @staticmethod
-    def get_user_by_username(username):
-        return User.query.get(username)
-
-    @staticmethod
     def register(username, password, permission=0):
         with db.auto_commit():
             user = User()
@@ -42,34 +38,6 @@ class User(Base):
             user.password = password
             user.permission = permission
             db.session.add(user)
-
-    @classmethod
-    def modify(cls, username, **kwargs):
-        user = cls.get_user_by_username(username)
-        with db.auto_commit():
-            for key, value in kwargs.items():
-                if hasattr(cls, key):
-                    setattr(user, key, value)
-
-    @classmethod
-    def search(cls, **kwargs):
-        res = User.query
-        for key, value in kwargs.items():
-            if value and hasattr(cls, key):
-                if isinstance(value, int):
-                    res = res.filter(getattr(cls, key) == value)
-                else:
-                    res = res.filter(getattr(cls, key).like(value))
-
-        data = {
-            'count': res.count()
-        }
-        page = kwargs.get('page', 1)
-        page_size = kwargs.get('page_size', 20)
-        res = res.offset((page - 1) * page_size).limit(page_size)
-        res = res.all()
-        data['data'] = res
-        return data
 
     @property
     def scope(self):

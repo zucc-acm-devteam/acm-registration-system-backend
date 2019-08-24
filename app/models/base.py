@@ -43,6 +43,38 @@ class Base(db.Model):
             self.fields.append(key)
         return self
 
+    @classmethod
+    def get_by_id(cls, id_):
+        return cls.query.get(id_)
+
+    @classmethod
+    def modify(cls, id_, **kwargs):
+        base = cls.get_by_id(id_)
+        with db.auto_commit():
+            for key, value in kwargs.items():
+                if hasattr(cls, key):
+                    setattr(base, key, value)
+
+    @classmethod
+    def search(cls, **kwargs):
+        res = cls.query
+        for key, value in kwargs.items():
+            if value and hasattr(cls, key):
+                if isinstance(value, int):
+                    res = res.filter(getattr(cls, key) == value)
+                else:
+                    res = res.filter(getattr(cls, key).like(value))
+
+        data = {
+            'count': res.count()
+        }
+        page = kwargs.get('page', 1)
+        page_size = kwargs.get('page_size', 20)
+        res = res.offset((page - 1) * page_size).limit(page_size)
+        res = res.all()
+        data['data'] = res
+        return data
+
 
 class MixinJSONSerializer:
     @orm.reconstructor

@@ -25,20 +25,17 @@ class Team(Base):
     def password(self, raw):
         self._password = generate_password_hash(raw)
 
-    @staticmethod
-    def get_team_by_id(id_):
-        return Team.query.get(id_)
-
     def check_password(self, raw):
         if not self._password:
             return False
         return check_password_hash(self._password, raw)
 
     @staticmethod
-    def create_team(name, contest_id, create_username):
+    def create_team(name, contest_id, create_username, password):
         with db.auto_commit():
             team = Team()
             team.name = name
             team.contest_id = contest_id
             team.create_username = create_username
+            team.password = password
             db.session.add(team)

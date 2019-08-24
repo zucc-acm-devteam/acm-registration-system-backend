@@ -61,16 +61,17 @@ class UserInfoForm(Form):
 class TeamInfoForm(Form):
     name = StringField(validators=[DataRequired(message='Name cannot be empty')])
     contest_id = IntegerField(validators=[DataRequired(message='Contest id cannot be empty')])
+    password = StringField(validators=[DataRequired(message='Password cannot be empty')])
 
     def validate_contest_id(self, value):
-        contest = Contest.get_contest_by_id(self.contest_id.data)
+        contest = Contest.get_by_id(self.contest_id.data)
         if not contest:
             raise NotFound('The contest does not exist')
 
 
 class ContestInfoForm(Form):
     name = StringField(validators=[DataRequired(message='Name cannot be empty')])
-    limit_num = StringField(validators=[DataRequired(message='Limit number cannot be empty')])
+    limit_num = IntegerField(validators=[DataRequired(message='Limit number cannot be empty')])
     status = IntegerField()
 
     def validate_status(self, value):
@@ -107,3 +108,14 @@ class SearchUserForm(PageForm):
     qq = StringField()
     permission = IntegerField()
     remark = StringField()
+
+
+class SearchContestForm(PageForm):
+    name = StringField()
+    limit_num = IntegerField()
+    status = IntegerField()
+
+
+class SearchTeamForm(PageForm):
+    name = StringField()
+    contest_id = IntegerField()
