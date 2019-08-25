@@ -50,9 +50,6 @@ def create_team_api():
         if i.team.contest.id == form['contest_id']:
             raise Forbidden('You already have a team')
 
-    if form['status'] != 0:
-        raise Forbidden()
-
     team = Team.create_team(form['name'], form['contest_id'], g.user.username, form['password'])
     TeamRelationship.create_team_relationship(g.user.username, team.id)
     return CreateSuccess('Create team success')
@@ -71,5 +68,8 @@ def modify_team_api(id_):
         raise Forbidden('Contest is not available')
 
     form = TeamInfoForm().validate_for_api().data_
+    if g.user.permission != -1 and form['status'] not in [0, 1]:
+        raise Forbidden()
+
     Team.modify(id_, **form)
     return Success('Modify team success')

@@ -12,11 +12,11 @@ class Contest(Base):
         return ['id', 'name', 'limit', 'status']
 
     @staticmethod
-    def create_contest(name, limit, status=0):
+    def create_contest(name, limit):
         with db.auto_commit():
             contest = Contest()
             contest.name = name
             contest.limit = limit
-            contest.status = status
+            contest.status = 0
             db.session.add(contest)
         return contest
