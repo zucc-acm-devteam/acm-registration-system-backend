@@ -13,6 +13,7 @@ class Team(Base):
     create_username = Column(ForeignKey('user.username'))
     create_user = relationship("app.models.user.User", foreign_keys=[create_username])
     _password = Column('password', String(100), nullable=False)
+    status = Column(Integer, nullable=False, default=0)
 
     def keys(self):
         return ['id', 'name', 'contest_id', 'create_username']
@@ -38,4 +39,6 @@ class Team(Base):
             team.contest_id = contest_id
             team.create_username = create_username
             team.password = password
+            team.status = 0
             db.session.add(team)
+        return team

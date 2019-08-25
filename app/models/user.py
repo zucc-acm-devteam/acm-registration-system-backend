@@ -41,12 +41,14 @@ class User(Base):
 
     @property
     def scope(self):
-        if self.permission == 1:  # 普通用户
+        if self.permission == 0 or self.permission == 1:
+            return 'IncompleteUserScope'
+        elif self.permission == 2:
             return 'UserScope'
-        elif self.permission == -1:  # 管理员
+        elif self.permission == -1:
             return 'AdminScope'
         else:  # 未激活用户
-            return 'InactivateUserScope'
+            return 'IncompleteUserScope'
 
     @classmethod
     def verify(cls, username, password):

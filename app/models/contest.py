@@ -19,3 +19,4 @@ class Contest(Base):
             contest.limit = limit
             contest.status = status
             db.session.add(contest)
+        return contest

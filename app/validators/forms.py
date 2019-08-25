@@ -1,7 +1,5 @@
 from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired, Regexp, ValidationError
-
-from app.libs.error_code import NotFound
 from app.models.contest import Contest
 from app.models.team import Team
 from app.models.user import User
@@ -78,6 +76,11 @@ class UserInfoForm(Form):
 class TeamInfoForm(ContestIdForm):
     name = StringField(validators=[DataRequired(message='Name cannot be empty')])
     password = StringField(validators=[DataRequired(message='Password cannot be empty')])
+    status = IntegerField()
+
+    def validate_status(self, value):
+        if self.status.data not in range(4):
+            raise ValidationError('Status only can be 0 to 3')
 
 
 class ContestInfoForm(Form):

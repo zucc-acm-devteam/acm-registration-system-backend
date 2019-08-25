@@ -31,6 +31,10 @@ def create_team_relationship_api():
     if contest.status == 0:
         raise Forbidden('Contest is not available')
 
+    for i in TeamRelationship.search(username=g.user.username):
+        if i.team_id == form['team_id']:
+            raise Forbidden('You already have a team')
+
     TeamRelationship.create_team_relationship(g.user.username, form['team_id'])
     return CreateSuccess('Create team relationship success')
 
@@ -45,6 +49,9 @@ def delete_team_relationship_api(id_):
     contest = TeamRelationship.get_by_id(id_).team.contest
     if contest.status == 0:
         raise Forbidden('Contest is not available')
+
+    if team_relationship.username != g.user.username:
+        raise Forbidden()
 
     TeamRelationship.delete_team_relationship(id_)
     return DeleteSuccess('Delete team relationship success')

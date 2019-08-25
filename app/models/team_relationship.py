@@ -10,7 +10,7 @@ class TeamRelationship(Base):
     team = relationship("app.models.team.Team", foreign_keys=[team_id])
 
     def keys(self):
-        return ['username', 'team_id']
+        return ['id', 'username', 'team_id']
 
     @staticmethod
     def create_team_relationship(username, team_id):
@@ -19,6 +19,7 @@ class TeamRelationship(Base):
             team_relationship.username = username
             team_relationship.team_id = team_id
             db.session.add(team_relationship)
+        return team_relationship
 
     @classmethod
     def delete_team_relationship(cls, id_):

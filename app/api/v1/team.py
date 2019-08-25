@@ -3,7 +3,9 @@ from flask import jsonify, g
 from app.libs.error_code import CreateSuccess, Forbidden, Success, NotFound
 from app.libs.redprint import Redprint
 from app.libs.token_auth import auth
+from app.models.contest import Contest
 from app.models.team import Team
+from app.models.team_relationship import TeamRelationship
 from app.validators.forms import TeamInfoForm, SearchTeamForm
 
 api = Redprint('team')
@@ -40,7 +42,16 @@ def search_team_api():
 @auth.login_required
 def create_team_api():
     form = TeamInfoForm().validate_for_api().data_
-    Team.create_team(form['name'], form['contest_id'], g.user.username, form['password'])
+    contest = Contest.get_by_id(form['contest_id'])
+    if contest.status == 0:
+        raise Forbidden('Contest is not available')
+
+    for i in TeamRelationship.search(username=g.user.username):
+        if i.team.contest.id == form['contest_id']:
+            raise Forbidden('You already have a team')
+
+    team = Team.create_team(form['name'], form['contest_id'], g.user.username, form['password'])
+    TeamRelationship.create_team_relationship(g.user.username, team.id)
     return CreateSuccess('Create team success')
 
 
@@ -52,6 +63,9 @@ def modify_team_api(id_):
         raise NotFound()
     if g.user.permission != -1 and g.user.username != team.create_username:
         raise Forbidden()
+    contest = team.contest
+    if contest.status == 0:
+        raise Forbidden('Contest is not available')
 
     form = TeamInfoForm().validate_for_api().data_
     Team.modify(id_, **form)

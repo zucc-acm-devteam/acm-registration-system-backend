@@ -21,3 +21,4 @@ class Announcement(Base):
             announcement.type = type_
             announcement.content = content
             db.session.add(announcement)
+        return announcement
