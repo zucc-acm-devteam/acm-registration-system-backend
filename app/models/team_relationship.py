@@ -23,6 +23,6 @@ class TeamRelationship(Base):
 
     @classmethod
     def delete_team_relationship(cls, id_):
+        team_relationship = cls.get_by_id(id_)
         with db.auto_commit():
-            team_relationship = cls.get_by_id(id_)
             db.session.delete(team_relationship)

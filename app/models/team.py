@@ -42,3 +42,9 @@ class Team(Base):
             team.status = 0
             db.session.add(team)
         return team
+
+    @classmethod
+    def delete_team(cls, id_):
+        team = cls.get_by_id(id_)
+        with db.auto_commit():
+            db.session.delete(team)
