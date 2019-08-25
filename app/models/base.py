@@ -68,8 +68,8 @@ class Base(db.Model):
         data = {
             'count': res.count()
         }
-        page = kwargs.get('page', 1)
-        page_size = kwargs.get('page_size', 20)
+        page = int(kwargs.get('page', 1))
+        page_size = int(kwargs.get('page_size', 20))
         res = res.offset((page - 1) * page_size).limit(page_size)
         res = res.all()
         data['data'] = res

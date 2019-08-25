@@ -114,14 +114,14 @@ class PageForm(Form):
 
     def validate_page(self, value):
         if self.page.data:
-            if self.page.data <= 0:
+            if int(self.page.data) <= 0:
                 raise ValidationError('Page must >= 1')
         else:
             self.page.data = 1
 
     def validate_page_size(self, value):
         if self.page_size.data:
-            if self.page_size.data > 100:
+            if int(self.page_size.data) > 100:
                 raise ValidationError('Page size must <= 100')
         else:
             self.page_size.data = 20
