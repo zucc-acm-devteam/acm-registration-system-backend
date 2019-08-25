@@ -50,6 +50,9 @@ def create_team_api():
         if i.team.contest.id == form['contest_id']:
             raise Forbidden('You already have a team')
 
+    if form['status'] != 0:
+        raise Forbidden()
+
     team = Team.create_team(form['name'], form['contest_id'], g.user.username, form['password'])
     TeamRelationship.create_team_relationship(g.user.username, team.id)
     return CreateSuccess('Create team success')
