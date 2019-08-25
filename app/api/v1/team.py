@@ -45,11 +45,12 @@ def create_team_api():
 
 
 @api.route('/<int:id_>', methods=['PUT'])
+@auth.login_required
 def modify_team_api(id_):
-    team = Team.get_team_by_id(id_)
+    team = Team.get_by_id(id_)
     if not team:
         raise NotFound()
-    if g.user.username != -1 and g.user.username != team.create_username:
+    if g.user.permission != -1 and g.user.username != team.create_username:
         raise Forbidden()
 
     form = TeamInfoForm().validate_for_api().data_

@@ -59,7 +59,7 @@ class Base(db.Model):
     def search(cls, **kwargs):
         res = cls.query
         for key, value in kwargs.items():
-            if value and hasattr(cls, key):
+            if value is not None and hasattr(cls, key):
                 if isinstance(value, int):
                     res = res.filter(getattr(cls, key) == value)
                 else:

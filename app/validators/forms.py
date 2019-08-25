@@ -3,6 +3,7 @@ from wtforms.validators import DataRequired, Regexp, ValidationError
 
 from app.libs.error_code import NotFound
 from app.models.contest import Contest
+from app.models.team import Team
 from app.models.user import User
 from app.validators.base import BaseForm as Form
 
@@ -11,9 +12,9 @@ class UsernameForm(Form):
     username = StringField(validators=[DataRequired(message='Username cannot be empty')])
 
     def validate_username(self, value):
-        user = User.get_user_by_username(self.username.data)
+        user = User.get_by_id(self.username.data)
         if not user:
-            raise NotFound('The user does not exist')
+            raise ValidationError('The user does not exist')
 
 
 class PasswordForm(Form):
@@ -32,9 +33,8 @@ class RegisterForm(PasswordForm, UuidForm):
     username = StringField(validators=[DataRequired(message='Username cannot be empty')])
 
     def validate_username(self, value):
-        user = User.get_user_by_username(self.username.data)
-        if user:
-            raise NotFound('The user already exist')
+        if User.get_by_id(self.username.data):
+            raise ValidationError('The user already exist')
 
 
 class MailForm(Form):
@@ -44,11 +44,28 @@ class MailForm(Form):
     ])
 
 
+class TeamIdForm(Form):
+    team_id = IntegerField(validators=[DataRequired(message='Team id cannot be empty')])
+
+    def validate_team_id(self, value):
+        if not Team.get_by_id(self.team_id.data):
+            raise ValidationError('The team does not exist')
+
+
+class ContestIdForm(Form):
+    contest_id = IntegerField(validators=[DataRequired(message='Contest id cannot be empty')])
+
+    def validate_contest_id(self, value):
+        if not Contest.get_by_id(self.contest_id.data):
+            raise ValidationError('The contest does not exist')
+
+
 class CodeForm(Form):
     code = StringField(validators=[DataRequired(message='Code cannot be empty')])
 
 
 class UserInfoForm(Form):
+    nickname = StringField(validators=[DataRequired(message='Nickname cannot be empty')])
     gender = IntegerField(validators=[DataRequired(message='Gender cannot be empty')])
     college = StringField(validators=[DataRequired(message='College cannot be empty')])
     profession = StringField(validators=[DataRequired(message='Profession cannot be empty')])
@@ -58,15 +75,9 @@ class UserInfoForm(Form):
     remark = StringField()
 
 
-class TeamInfoForm(Form):
+class TeamInfoForm(ContestIdForm):
     name = StringField(validators=[DataRequired(message='Name cannot be empty')])
-    contest_id = IntegerField(validators=[DataRequired(message='Contest id cannot be empty')])
     password = StringField(validators=[DataRequired(message='Password cannot be empty')])
-
-    def validate_contest_id(self, value):
-        contest = Contest.get_by_id(self.contest_id.data)
-        if not contest:
-            raise NotFound('The contest does not exist')
 
 
 class ContestInfoForm(Form):
@@ -77,6 +88,21 @@ class ContestInfoForm(Form):
     def validate_status(self, value):
         if self.status.data != 0 and self.status.data != 1:
             raise ValidationError('Status only can be 0 or 1')
+
+
+class AnnouncementInfoForm(Form):
+    contest_id = IntegerField()
+    type = IntegerField(validators=[DataRequired(message='Type cannot be empty')])
+    content = StringField(validators=[DataRequired(message='Content cannot be empty')])
+
+    def validate_contest_id(self, value):
+        if self.contest_id.data:
+            if not Contest.get_by_id(self.contest_id.data):
+                raise ValidationError('The contest does not exist')
+
+
+class TeamRelationshipForm(TeamIdForm):
+    pass
 
 
 class PageForm(Form):
@@ -106,8 +132,8 @@ class SearchUserForm(PageForm):
     class_ = StringField()
     phone = StringField()
     qq = StringField()
-    permission = IntegerField()
     remark = StringField()
+    permission = IntegerField()
 
 
 class SearchContestForm(PageForm):
@@ -119,3 +145,15 @@ class SearchContestForm(PageForm):
 class SearchTeamForm(PageForm):
     name = StringField()
     contest_id = IntegerField()
+    create_username = StringField()
+
+
+class SearchAnnouncementForm(PageForm):
+    contest_id = IntegerField()
+    type = IntegerField()
+    content = StringField()
+
+
+class SearchTeamRelationshipForm(Form):
+    username = StringField()
+    team_id = IntegerField()

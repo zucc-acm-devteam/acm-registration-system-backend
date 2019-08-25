@@ -31,15 +31,21 @@ def is_in_scope(scope, endpoint):
 
 
 class UserScope(Scope):
-    allow_module = ['v1.token', 'v1.user', 'v1.captcha', 'v1.contest', 'v1.team']
+    allow_module = ['v1.token', 'v1.user', 'v1.captcha', 'v1.contest', 'v1.team', 'v1.announcement',
+                    'v1.team_relationship']
 
 
-class InactivateUserScope(Scope):
+class InactivateUserScope(Scope):  # 未激活
     allow_module = ['v1.token', 'v1.captcha']
     allow_api = [
         'v1.user+activate_user_api'
     ]
 
 
+class IncompleteUserScope(InactivateUserScope):  # 资料不完整用户
+    pass
+
+
 class AdminScope(Scope):
-    allow_module = ['v1.token', 'v1.user', 'v1.captcha', 'v1.contest', 'v1.team']
+    allow_module = ['v1.token', 'v1.user', 'v1.captcha', 'v1.contest', 'v1.team', 'v1.announcement',
+                    'v1.team_relationship']

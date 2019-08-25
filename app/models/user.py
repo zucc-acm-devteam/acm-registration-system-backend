@@ -50,7 +50,7 @@ class User(Base):
 
     @classmethod
     def verify(cls, username, password):
-        user = cls.get_user_by_username(username)
+        user = cls.get_by_id(username)
         if not user.check_password(password):
             raise AuthFailed('username or password wrong')
         return {'uid': user.username}

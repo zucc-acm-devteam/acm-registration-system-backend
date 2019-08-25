@@ -16,6 +16,8 @@ def get_user_api(username):
     user = User.get_by_id(username)
     if not user:
         raise NotFound()
+    if g.user.permission != -1 and g.user.username != username:
+        raise Forbidden()
     return jsonify({
         'code': 0,
         'data': {
@@ -51,7 +53,7 @@ def modify_user_api(username):
     user = User.get_by_id(username)
     if not user:
         raise NotFound()
-    if g.user.profession != -1 and g.user.username != username:
+    if g.user.permission != -1 and g.user.username != username:
         raise Forbidden()
 
     form = UserInfoForm().validate_for_api().data_
