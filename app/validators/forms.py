@@ -109,7 +109,7 @@ class AnnouncementInfoForm(Form):
                 raise ValidationError('The contest does not exist')
 
 
-class TeamRelationshipForm(TeamIdForm):
+class TeamRelationshipForm(TeamIdForm, PasswordForm):
     pass
 
 
@@ -168,3 +168,4 @@ class SearchAnnouncementForm(PageForm):
 class SearchTeamRelationshipForm(Form):
     username = StringField()
     team_id = IntegerField()
+    contest_id = IntegerField()

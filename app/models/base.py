@@ -59,15 +59,16 @@ class Base(db.Model):
     def search(cls, **kwargs):
         res = cls.query
         for key, value in kwargs.items():
-            if value is not None and hasattr(cls, key):
+            if value is not None:
                 try:
                     value = int(value)
                 except ValueError:
                     pass
-                if isinstance(value, int):
-                    res = res.filter(getattr(cls, key) == value)
-                else:
-                    res = res.filter(getattr(cls, key).like(value))
+                if hasattr(cls, key):
+                    if isinstance(value, int):
+                        res = res.filter(getattr(cls, key) == value)
+                    else:
+                        res = res.filter(getattr(cls, key).like(value))
 
         data = {
             'count': res.count()

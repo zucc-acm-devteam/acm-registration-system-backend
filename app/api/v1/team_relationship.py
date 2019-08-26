@@ -27,12 +27,14 @@ def search_team_relationship_api():
 @auth.login_required
 def create_team_relationship_api():
     form = TeamRelationshipForm().validate_for_api().data_
-    contest = Team.get_by_id(form['team_id']).contest
-    if contest.status == 0:
+    team = Team.get_by_id(form['team_id'])
+    if team.contest.status == 0:
         raise Forbidden('Contest is not available')
     for i in TeamRelationship.search(username=g.user.username):
         if i.team_id == form['team_id']:
             raise Forbidden('You already have a team')
+    if not team.check_password(form['password']):
+        raise Forbidden('Password wrong')
 
     TeamRelationship.create_team_relationship(g.user.username, form['team_id'])
     return CreateSuccess('Create team relationship success')
