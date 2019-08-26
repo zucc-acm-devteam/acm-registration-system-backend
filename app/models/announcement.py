@@ -28,9 +28,13 @@ class Announcement(Base):
         res = cls.query
         for key, value in kwargs.items():
             if value is not None and hasattr(cls, key):
+                try:
+                    value = int(value)
+                except ValueError:
+                    pass
                 if isinstance(value, int):
                     if key == 'contest_id':
-                        res = res.filter(or_(getattr(cls, key) == value, getattr(cls, key) is None))
+                        res = res.filter(or_(getattr(cls, key) == value, getattr(cls, key).is_(None)))
                     else:
                         res = res.filter(getattr(cls, key) == value)
                 else:

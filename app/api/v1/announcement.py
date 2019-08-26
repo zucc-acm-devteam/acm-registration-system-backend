@@ -9,22 +9,7 @@ from app.validators.forms import SearchAnnouncementForm, AnnouncementInfoForm
 api = Redprint('announcement')
 
 
-@api.route('/<int:id_>', methods=['GET'])
-@auth.login_required
-def get_announcement_api(id_):
-    announcement = Announcement.get_by_id(id_)
-    if not announcement:
-        raise NotFound()
-    return jsonify({
-        'code': 0,
-        'data': {
-            'announcement': announcement
-        }
-    })
-
-
 @api.route('/', methods=['GET'])
-@auth.login_required
 def search_announcement_api():
     form = SearchAnnouncementForm().validate_for_api().data_
     res = Announcement.search(**form)

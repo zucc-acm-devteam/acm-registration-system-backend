@@ -60,6 +60,10 @@ class Base(db.Model):
         res = cls.query
         for key, value in kwargs.items():
             if value is not None and hasattr(cls, key):
+                try:
+                    value = int(value)
+                except ValueError:
+                    pass
                 if isinstance(value, int):
                     res = res.filter(getattr(cls, key) == value)
                 else:

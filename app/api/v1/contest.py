@@ -9,20 +9,6 @@ from app.validators.forms import ContestInfoForm, SearchContestForm
 api = Redprint('contest')
 
 
-@api.route('/<int:id_>', methods=['GET'])
-@auth.login_required
-def get_contest_api(id_):
-    contest = Contest.get_by_id(id_)
-    if not contest:
-        raise NotFound()
-    return jsonify({
-        'code': 0,
-        'data': {
-            'contest': contest
-        }
-    })
-
-
 @api.route('/', methods=['GET'])
 def search_contest_api():
     form = SearchContestForm().validate_for_api().data_
