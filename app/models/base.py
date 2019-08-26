@@ -68,7 +68,10 @@ class Base(db.Model):
         data = {
             'count': res.count()
         }
-        res = res.order_by(desc(cls.id))
+        try:
+            res = res.order_by(desc(cls.id))
+        except AttributeError:
+            pass
         page = int(kwargs.get('page', 1))
         page_size = int(kwargs.get('page_size', 20))
         res = res.offset((page - 1) * page_size).limit(page_size)
