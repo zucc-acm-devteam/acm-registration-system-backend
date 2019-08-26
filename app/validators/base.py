@@ -1,11 +1,13 @@
 from flask import request
 from flask_wtf import FlaskForm
+from werkzeug.datastructures import MultiDict
+
 from app.libs.error_code import ParameterException
 
 
 class BaseForm(FlaskForm):
     def __init__(self):
-        data = request.get_json(silent=True)
+        data = MultiDict(request.get_json(silent=True))
         args = request.args.to_dict()
         super(BaseForm, self).__init__(data=data, **args)
 
