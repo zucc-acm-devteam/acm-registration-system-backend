@@ -45,7 +45,7 @@ def create_team_api():
     contest = Contest.get_by_id(form['contest_id'])
     if contest.status == 0:
         raise Forbidden('Contest is not available')
-    for i in TeamRelationship.search(username=g.user.username):
+    for i in TeamRelationship.search(username=g.user.username)['data']:
         if i.team.contest.id == form['contest_id']:
             raise Forbidden('You already have a team')
 
