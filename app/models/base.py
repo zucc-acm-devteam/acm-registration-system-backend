@@ -1,7 +1,7 @@
 from contextlib import contextmanager
 from flask_sqlalchemy import BaseQuery
 from flask_sqlalchemy import SQLAlchemy as _SQLAlchemy
-from sqlalchemy import inspect, orm
+from sqlalchemy import inspect, orm, desc
 
 
 class SQLAlchemy(_SQLAlchemy):
@@ -68,6 +68,7 @@ class Base(db.Model):
         data = {
             'count': res.count()
         }
+        res = res.order_by(desc(cls.id))
         page = int(kwargs.get('page', 1))
         page_size = int(kwargs.get('page_size', 20))
         res = res.offset((page - 1) * page_size).limit(page_size)

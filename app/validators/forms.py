@@ -85,7 +85,7 @@ class TeamInfoForm(ContestIdForm):
 
 class ContestInfoForm(Form):
     name = StringField(validators=[DataRequired(message='Name cannot be empty')])
-    limit_num = IntegerField(validators=[DataRequired(message='Limit number cannot be empty')])
+    limit = IntegerField(validators=[DataRequired(message='Limit number cannot be empty')])
     status = IntegerField()
 
     def validate_status(self, value):

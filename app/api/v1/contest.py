@@ -39,7 +39,7 @@ def search_contest_api():
 @auth.login_required
 def create_contest_api():
     form = ContestInfoForm().validate_for_api().data_
-    Contest.create_contest(form['name'], form['limit_num'])
+    Contest.create_contest(form['name'], form['limit'])
     return CreateSuccess('Create contest success')
 
 
