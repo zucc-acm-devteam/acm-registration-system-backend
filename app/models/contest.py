@@ -20,3 +20,9 @@ class Contest(Base):
             contest.status = 0
             db.session.add(contest)
         return contest
+
+    @classmethod
+    def delete_contest(cls, id_):
+        contest = cls.get_by_id(id_)
+        with db.auto_commit():
+            db.session.delete(contest)

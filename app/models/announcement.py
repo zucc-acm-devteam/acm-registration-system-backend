@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, ForeignKey, Text
+from sqlalchemy import Column, Integer, ForeignKey, Text, or_
 from sqlalchemy.orm import relationship
 from app.models.base import Base, db
 
@@ -22,3 +22,26 @@ class Announcement(Base):
             announcement.content = content
             db.session.add(announcement)
         return announcement
+
+    @classmethod
+    def search(cls, **kwargs):
+        res = cls.query
+        for key, value in kwargs.items():
+            if value is not None and hasattr(cls, key):
+                if isinstance(value, int):
+                    if key == 'contest_id':
+                        res = res.filter(or_(getattr(cls, key) == value, getattr(cls, key) is None))
+                    else:
+                        res = res.filter(getattr(cls, key) == value)
+                else:
+                    res = res.filter(getattr(cls, key).like(value))
+
+        data = {
+            'count': res.count()
+        }
+        page = int(kwargs.get('page', 1))
+        page_size = int(kwargs.get('page_size', 20))
+        res = res.offset((page - 1) * page_size).limit(page_size)
+        res = res.all()
+        data['data'] = res
+        return data
