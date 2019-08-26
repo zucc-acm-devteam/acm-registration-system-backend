@@ -1,6 +1,6 @@
 from flask import jsonify
 
-from app.libs.error_code import CreateSuccess, Success, NotFound
+from app.libs.error_code import CreateSuccess, Success, NotFound, DeleteSuccess
 from app.libs.redprint import Redprint
 from app.libs.token_auth import auth
 from app.models.announcement import Announcement
@@ -38,3 +38,12 @@ def modify_announcement_api(id_):
     form = AnnouncementInfoForm().validate_for_api().data_
     Announcement.modify(id_, **form)
     return Success('Modify announcement success')
+
+
+@api.route('/<int:id_>', methods=['DELETE'])
+def delete_announcement_api(id_):
+    announcement = Announcement.get_by_id(id_)
+    if not announcement:
+        raise NotFound()
+    Announcement.delete_announcement(id_)
+    return DeleteSuccess('Delete announcement success')

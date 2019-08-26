@@ -7,9 +7,10 @@ class Contest(Base):
     name = Column(String(100), nullable=False)
     limit = Column(Integer, nullable=False)
     status = Column(Integer, nullable=False, default=0)
+    registration_status = Column(Integer, nullable=False, default=0)
 
     def keys(self):
-        return ['id', 'name', 'limit', 'status']
+        return ['id', 'name', 'limit', 'status', 'registration_status']
 
     @staticmethod
     def create_contest(name, limit):
@@ -18,6 +19,7 @@ class Contest(Base):
             contest.name = name
             contest.limit = limit
             contest.status = 0
+            contest.registration_status = 0
             db.session.add(contest)
         return contest
 

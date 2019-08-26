@@ -24,6 +24,12 @@ class Announcement(Base):
         return announcement
 
     @classmethod
+    def delete_announcement(cls, id_):
+        announcement = cls.get_by_id(id_)
+        with db.auto_commit():
+            db.session.delete(announcement)
+
+    @classmethod
     def search(cls, **kwargs):
         res = cls.query
         for key, value in kwargs.items():

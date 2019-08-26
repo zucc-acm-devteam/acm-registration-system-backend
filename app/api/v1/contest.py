@@ -43,5 +43,8 @@ def modify_contest_api(id_):
 @api.route('/<int:id_>', methods=['DELETE'])
 @auth.login_required
 def delete_contest_api(id_):
+    contest = Contest.get_by_id(id_)
+    if not contest:
+        raise NotFound()
     Contest.delete_contest(id_)
     return DeleteSuccess('Delete team success')

@@ -87,10 +87,15 @@ class ContestInfoForm(Form):
     name = StringField(validators=[DataRequired(message='Name cannot be empty')])
     limit = IntegerField(validators=[DataRequired(message='Limit number cannot be empty')])
     status = IntegerField()
+    registration_status = IntegerField()
 
     def validate_status(self, value):
         if self.status.data != 0 and self.status.data != 1:
             raise ValidationError('Status only can be 0 or 1')
+
+    def validate_registration_status(self, value):
+        if self.registration_status.data != 0 and self.registration_status.data != 1:
+            raise ValidationError('Registration status only can be 0 or 1')
 
 
 class AnnouncementInfoForm(Form):
@@ -113,17 +118,19 @@ class PageForm(Form):
     page_size = IntegerField()
 
     def validate_page(self, value):
-        if self.page.data:
-            if int(self.page.data) <= 0:
+        try:
+            self.page.data = int(self.page.data)
+            if self.page.data <= 0:
                 raise ValidationError('Page must >= 1')
-        else:
+        except TypeError:
             self.page.data = 1
 
     def validate_page_size(self, value):
-        if self.page_size.data:
-            if int(self.page_size.data) > 100:
-                raise ValidationError('Page size must <= 100')
-        else:
+        try:
+            self.page_size.data = int(self.page_size.data)
+            if self.page_size.data <= 0 or self.page_size.data > 100:
+                raise ValidationError('Page size must > 0 and <= 100')
+        except TypeError:
             self.page_size.data = 20
 
 
@@ -143,6 +150,7 @@ class SearchContestForm(PageForm):
     name = StringField()
     limit_num = IntegerField()
     status = IntegerField()
+    registration_status = IntegerField()
 
 
 class SearchTeamForm(PageForm):
