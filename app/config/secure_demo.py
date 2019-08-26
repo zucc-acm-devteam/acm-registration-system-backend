@@ -9,6 +9,7 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 # 定义flask信息
 SECRET_KEY = ''
 WHITELIST_UA = ''
+WTF_CSRF_ENABLED = False
 
 # 定义邮件信息
 MAIL_SERVER = None

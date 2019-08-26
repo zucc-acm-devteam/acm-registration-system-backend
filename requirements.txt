@@ -4,7 +4,7 @@ Flask-httpauth
 Flask-SQLAlchemy
 Flask-mail
 Flask-redis
+Flask-wtf
 PyMySQL
-WTForms
 gunicorn
 captcha

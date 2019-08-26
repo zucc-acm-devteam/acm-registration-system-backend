@@ -1,10 +1,9 @@
 from flask import request
-from wtforms import Form
-
+from flask_wtf import FlaskForm
 from app.libs.error_code import ParameterException
 
 
-class BaseForm(Form):
+class BaseForm(FlaskForm):
     def __init__(self):
         data = request.get_json(silent=True)
         args = request.args.to_dict()
