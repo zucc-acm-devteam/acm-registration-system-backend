@@ -30,7 +30,7 @@ def create_team_relationship_api():
     team = Team.get_by_id(form['team_id'])
     if team.contest.status == 0:
         raise Forbidden('Contest is not available')
-    for i in TeamRelationship.search(username=g.user.username):
+    for i in TeamRelationship.search(username=g.user.username)['data']:
         if i.team_id == form['team_id']:
             raise Forbidden('You already have a team')
     if not team.check_password(form['password']):
