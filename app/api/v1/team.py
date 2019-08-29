@@ -85,6 +85,6 @@ def delete_team_api(id_):
     team_relationship = TeamRelationship.search(team_id=team.id)
     if len(team_relationship['data']) != 1:
         raise Forbidden('There are other members in the team')
-    TeamRelationship.delete_team_relationship(team_relationship[0].id)
+    TeamRelationship.delete_team_relationship(team_relationship['data'][0].id)
     Team.delete_team(id_)
     return DeleteSuccess('Delete team success')
