@@ -83,7 +83,7 @@ def delete_team_api(id_):
     if team.contest.status == 0:
         raise Forbidden('Contest is not available')
     team_relationship = TeamRelationship.search(team_id=team.id)
-    if len(team_relationship) != 1:
+    if len(team_relationship['data']) != 1:
         raise Forbidden('There are other members in the team')
     TeamRelationship.delete_team_relationship(team_relationship[0].id)
     Team.delete_team(id_)
