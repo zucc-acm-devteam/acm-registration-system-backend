@@ -33,6 +33,8 @@ def create_team_relationship_api():
     for i in TeamRelationship.search(username=g.user.username)['data']:
         if i.team_id == form['team_id']:
             raise Forbidden('You already have a team')
+    if TeamRelationship.search(team_id=form['team_id'])['count'] >= team.contest.limit:
+        raise Forbidden('The team is full')
     if not team.check_password(form['password']):
         raise Forbidden('Password wrong')
 
