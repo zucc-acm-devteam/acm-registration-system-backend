@@ -74,7 +74,7 @@ class UserInfoForm(Form):
 
 
 class TeamInfoForm(ContestIdForm):
-    name = StringField(validators=[DataRequired(message='Name cannot be empty')])
+    name = StringField()
     password = StringField()
     status = IntegerField()
 
