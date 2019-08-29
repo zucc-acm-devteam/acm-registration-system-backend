@@ -8,11 +8,12 @@ from app.models.team import Team
 class TeamRelationship(Base):
     id = Column(Integer, autoincrement=True, primary_key=True)
     username = Column(ForeignKey('user.username'))
+    user = relationship("app.models.user.User", foreign_keys=[username])
     team_id = Column(ForeignKey('team.id'))
     team = relationship("app.models.team.Team", foreign_keys=[team_id])
 
     def keys(self):
-        return ['id', 'username', 'team']
+        return ['id', 'user', 'team']
 
     @staticmethod
     def create_team_relationship(username, team_id):
