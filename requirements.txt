@@ -8,3 +8,4 @@ Flask-wtf
 PyMySQL
 gunicorn
 captcha
+aliyun-python-sdk-core-v3

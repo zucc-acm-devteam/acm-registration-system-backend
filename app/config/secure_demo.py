@@ -21,3 +21,7 @@ MAIL_DEFAULT_SENDER = None
 
 # 定义redis信息
 REDIS_URL = ''
+
+# 定义阿里云账号信息
+access_key_id = ''
+access_secret = ''
