@@ -12,7 +12,6 @@ api = Redprint('team')
 
 
 @api.route('/<int:id_>', methods=['GET'])
-@auth.login_required
 def get_team_api(id_):
     team = Team.get_by_id(id_)
     if not team:
@@ -26,7 +25,6 @@ def get_team_api(id_):
 
 
 @api.route('/', methods=['GET'])
-@auth.login_required
 def search_team_api():
     form = SearchTeamForm().validate_for_api().data_
     res = Team.search(**form)

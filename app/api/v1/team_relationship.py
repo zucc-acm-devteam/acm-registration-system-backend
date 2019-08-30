@@ -11,7 +11,6 @@ api = Redprint('team_relationship')
 
 
 @api.route('/', methods=['GET'])
-@auth.login_required
 def search_team_relationship_api():
     form = SearchTeamRelationshipForm().validate_for_api().data_
     res = TeamRelationship.search(**form)
