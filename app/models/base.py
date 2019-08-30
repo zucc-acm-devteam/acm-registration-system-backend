@@ -52,7 +52,7 @@ class Base(db.Model):
         base = cls.get_by_id(id_)
         with db.auto_commit():
             for key, value in kwargs.items():
-                if value is not None:
+                if value:
                     if hasattr(cls, key):
                         setattr(base, key, value)
 
@@ -60,7 +60,7 @@ class Base(db.Model):
     def search(cls, **kwargs):
         res = cls.query
         for key, value in kwargs.items():
-            if value is not None:
+            if value:
                 try:
                     value = int(value)
                 except ValueError:
