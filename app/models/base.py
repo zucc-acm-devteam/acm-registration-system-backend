@@ -52,8 +52,9 @@ class Base(db.Model):
         base = cls.get_by_id(id_)
         with db.auto_commit():
             for key, value in kwargs.items():
-                if hasattr(cls, key):
-                    setattr(base, key, value)
+                if value is not None:
+                    if hasattr(cls, key):
+                        setattr(base, key, value)
 
     @classmethod
     def search(cls, **kwargs):
