@@ -57,7 +57,8 @@ def modify_user_api(username):
         raise Forbidden()
 
     form = UserInfoForm().validate_for_api().data_
-    User.modify(username, **form, permission=2)
+    if user.permission == 1:
+        User.modify(username, **form, permission=2)
     return Success('Modify user success')
 
 
