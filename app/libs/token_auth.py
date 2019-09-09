@@ -23,7 +23,7 @@ def verify_token(token, secret):
     ua = request.headers.get('User-Agent', '')
     if ua != WHITELIST_UA:
         timestamp = int(request.headers.get('Timestamp', 0))
-        if abs(timestamp - int(time.time())) > 10:
+        if abs(timestamp - int(time.time())) > 100:
             raise AuthFailed()
 
         my_secret = md5(token + str(timestamp))
