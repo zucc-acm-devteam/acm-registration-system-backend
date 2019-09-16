@@ -27,8 +27,13 @@ def search_team_relationship_api():
 def create_team_relationship_api():
     form = TeamRelationshipForm().validate_for_api().data_
     team = Team.get_by_id(form['team_id'])
-    if team.contest.status == 0:
+    if not team:
+        raise NotFound()
+    contest = team.contest
+    if contest.status == 0:
         raise Forbidden('Contest is not available')
+    if contest.registration_status == 0:
+        raise Forbidden('Contest is not open registration')
     for i in TeamRelationship.search(username=g.user.username)['data']:
         if i.team_id == form['team_id']:
             raise Forbidden('You already have a team')
@@ -47,9 +52,11 @@ def delete_team_relationship_api(id_):
     team_relationship = TeamRelationship.get_by_id(id_)
     if not team_relationship:
         raise NotFound()
-    contest = TeamRelationship.get_by_id(id_).team.contest
+    contest = team_relationship.team.contest
     if contest.status == 0:
         raise Forbidden('Contest is not available')
+    if contest.registration_status == 0:
+        raise Forbidden('Contest is not open registration')
     if team_relationship.username != g.user.username:
         raise Forbidden()
     if team_relationship.team.create_username == team_relationship.username:

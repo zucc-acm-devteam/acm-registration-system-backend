@@ -43,6 +43,8 @@ def create_team_api():
     contest = Contest.get_by_id(form['contest_id'])
     if contest.status == 0:
         raise Forbidden('Contest is not available')
+    if contest.registration_status == 0:
+        raise Forbidden('Contest is not open registration')
     for i in TeamRelationship.search(username=g.user.username)['data']:
         if i.team.contest.id == form['contest_id']:
             raise Forbidden('You already have a team')
@@ -58,10 +60,13 @@ def modify_team_api(id_):
     team = Team.get_by_id(id_)
     if not team:
         raise NotFound()
+    contest = team.contest
+    if contest.status == 0:
+        raise Forbidden('Contest is not available')
+    if contest.registration_status == 0:
+        raise Forbidden('Contest is not open registration')
     if g.user.permission != -1 and g.user.username != team.create_username:
         raise Forbidden()
-    if team.contest.status == 0:
-        raise Forbidden('Contest is not available')
     form = TeamInfoForm().validate_for_api().data_
     if g.user.permission != -1 and form['status'] not in [0, 1]:
         raise Forbidden()
@@ -76,10 +81,13 @@ def delete_team_api(id_):
     team = Team.get_by_id(id_)
     if not team:
         raise NotFound()
+    contest = team.contest
+    if contest.status == 0:
+        raise Forbidden('Contest is not available')
+    if contest.registration_status == 0:
+        raise Forbidden('Contest is not open registration')
     if g.user.permission != -1 and g.user.username != team.create_username:
         raise Forbidden()
-    if team.contest.status == 0:
-        raise Forbidden('Contest is not available')
     team_relationship = TeamRelationship.search(team_id=team.id)
     if team_relationship['count'] != 1:
         raise Forbidden('There are other members in the team')
