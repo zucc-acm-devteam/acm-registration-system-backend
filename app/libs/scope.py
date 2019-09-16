@@ -44,7 +44,8 @@ class IncompleteUserScope(Scope):  # 未注册完成用户
     allow_module = ['v1.token', 'v1.captcha']
     allow_api = [
         'v1.user+activate_user_api',
-        'v1.user+modify_user_api'
+        'v1.user+modify_user_api',
+        'v1.user+get_user_api'
     ]
 
 
