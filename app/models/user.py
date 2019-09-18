@@ -18,9 +18,7 @@ class User(Base):
     remark = Column(String(10000))
     permission = Column(Integer, nullable=False, default=0)
 
-    def keys(self):
-        return ['username', 'nickname', 'gender', 'college', 'profession', 'class_',
-                'phone', 'qq', 'remark', 'permission']
+    fields = ['username', 'nickname', 'permission']
 
     @property
     def password(self):

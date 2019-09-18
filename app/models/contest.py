@@ -9,8 +9,7 @@ class Contest(Base):
     status = Column(Integer, nullable=False, default=0)
     registration_status = Column(Integer, nullable=False, default=0)
 
-    def keys(self):
-        return ['id', 'name', 'limit', 'status', 'registration_status']
+    fields = ['id', 'name', 'limit', 'status', 'registration_status']
 
     @staticmethod
     def create_contest(name, limit):

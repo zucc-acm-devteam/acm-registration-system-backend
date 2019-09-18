@@ -18,6 +18,8 @@ def get_user_api(username):
         raise NotFound()
     if g.user.permission != -1 and g.user.username != username:
         raise Forbidden()
+    user.fields = ['username', 'nickname', 'permission', 'gender',
+                   'college', 'profession', 'class_', 'phone', 'qq', 'remark']
     return jsonify({
         'code': 0,
         'data': {

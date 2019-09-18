@@ -10,8 +10,7 @@ class Announcement(Base):
     type = Column(Integer, nullable=False)
     content = Column(Text)
 
-    def keys(self):
-        return ['id', 'contest_id', 'type', 'content']
+    fields = ['id', 'contest_id', 'type', 'content']
 
     @staticmethod
     def create_announcement(contest_id, type_, content):

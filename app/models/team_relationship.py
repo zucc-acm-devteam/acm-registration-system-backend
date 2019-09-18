@@ -12,8 +12,7 @@ class TeamRelationship(Base):
     team_id = Column(ForeignKey('team.id'))
     team = relationship("app.models.team.Team", foreign_keys=[team_id])
 
-    def keys(self):
-        return ['id', 'user', 'team']
+    fields = ['id', 'user', 'team']
 
     @staticmethod
     def create_team_relationship(username, team_id):

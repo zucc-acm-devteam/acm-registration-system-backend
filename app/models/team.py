@@ -15,8 +15,7 @@ class Team(Base):
     _password = Column('password', String(100), nullable=False)
     status = Column(Integer, nullable=False, default=0)
 
-    def keys(self):
-        return ['id', 'name', 'contest_id', 'create_username', 'status']
+    fields = ['id', 'name', 'contest_id', 'create_username', 'status']
 
     @property
     def password(self):
