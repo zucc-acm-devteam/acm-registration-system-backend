@@ -166,7 +166,7 @@ class SearchTeamForm(PageForm):
         try:
             self.status.data = list(set(json.loads(self.status.data)))
         except:
-            raise ValidationError('status must be list')
+            self.status.data = [1, 2, 3]
 
 
 class SearchAnnouncementForm(PageForm):
