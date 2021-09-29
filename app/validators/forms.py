@@ -1,5 +1,8 @@
+import json
+
 from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired, Regexp, ValidationError
+
 from app.models.contest import Contest
 from app.models.team import Team
 from app.models.user import User
@@ -157,6 +160,13 @@ class SearchTeamForm(PageForm):
     name = StringField()
     contest_id = IntegerField()
     create_username = StringField()
+    status = StringField()
+
+    def validate_status(self, value):
+        try:
+            self.status.data = list(set(json.loads(self.status.data)))
+        except:
+            raise ValidationError('status must be list')
 
 
 class SearchAnnouncementForm(PageForm):
