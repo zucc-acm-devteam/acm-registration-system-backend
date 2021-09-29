@@ -1,4 +1,5 @@
 from contextlib import contextmanager
+
 from flask_sqlalchemy import BaseQuery
 from flask_sqlalchemy import SQLAlchemy as _SQLAlchemy
 from sqlalchemy import inspect, orm, desc
@@ -63,11 +64,13 @@ class Base(db.Model):
             if value is not None and value != '':
                 try:
                     value = int(value)
-                except ValueError:
+                except (ValueError, TypeError):
                     pass
                 if hasattr(cls, key):
                     if isinstance(value, int):
                         res = res.filter(getattr(cls, key) == value)
+                    elif isinstance(value, list):
+                        res = res.filter(getattr(cls, key).in_(value))
                     else:
                         res = res.filter(getattr(cls, key).like(value))
 
